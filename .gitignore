@@ -1,0 +1,23 @@
+# Java temp files ignore.
+.gradle
+.idea
+.build
+gradlew.bat
+
+# Web temp files ignore.
+web/node_modules
+web/.pnp
+web/.pnp.js
+web/coverage
+web/.next/
+web/out/
+web/build
+web/.DS_Store
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/.env.local
+web/.env.development.local
+web/.env.test.local
+web/.env.production.local
+

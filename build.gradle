@@ -1,0 +1,41 @@
+plugins {
+    id'application'
+    id'com.github.johnrengelman.shadow' version '4.0.4'
+}
+
+mainClassName = 'com.gamerexde.discordrecaptcha.DiscordOAuthAuthenticator'
+
+version '1.0'
+def jdaVersion = '4.2.0_207'
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "net.dv8tion:JDA:$jdaVersion"
+    compile 'com.jagrosh:jda-utilities:3.0.4'
+    compile 'mysql:mysql-connector-java:5.1.48'
+    compile 'com.google.guava:guava:29.0-jre'
+    compile 'com.zaxxer:HikariCP:3.4.5'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.gamerexde.discordrecaptcha.DiscordOAuthAuthenticator"
+    }
+    compileJava.options.encoding = 'UTF-8'
+    from {
+        configurations
+                .compile
+                .findAll { !it.name.endsWith('pom') }
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+compileJava.options.encoding = 'UTF-8'
