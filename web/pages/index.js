@@ -1,12 +1,31 @@
 import {Navbar, Nav, Container, Card} from "react-bootstrap";
 
+import axios from 'axios'
 import NavBar from "../components/navbar";
+import cookies from "next-cookies";
 
 class Home extends React.Component {
+    static async getInitialProps(ctx) {
+        let token = cookies(ctx).access_token
+        let userInfo = null;
+        await axios.get('http://127.0.0.1:4000/user/info', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        ).then(response => { userInfo = response.data })
+            .catch(error => { console.log("didn't work...")  })
+
+        return {
+            user: userInfo,
+            token: cookies(ctx).access_token
+        }
+    }
+
     render() {
         return (
             <div>
-                <NavBar />
+                <NavBar userinfo={this.props.user}/>
 
                 <Container>
                     <br />

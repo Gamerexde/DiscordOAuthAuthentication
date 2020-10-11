@@ -23,9 +23,9 @@ public class MySQL extends Database {
     }
      */
 
-    public static final String USER_ERROR = "[DiscordReCaptcha] Error while creating tables, verify user permissions and then try again...";
-    public static final String CONNECTION_USER_ERROR = "[DiscordReCaptcha] The connection cannot be established due to a misconfiguration in the config.json or the MySQL Server configuration. Fix the error and try again.";
-    public static final String INTERNAL_ERROR = "[DiscordReCaptcha] Internal Error. This is a fatal error! Do not try to ignore it piece of shit";
+    public static final String USER_ERROR = "[DiscordOAuth] Error while creating tables, verify user permissions and then try again...";
+    public static final String CONNECTION_USER_ERROR = "[DiscordOAuth] The connection cannot be established due to a misconfiguration in the config.json or the MySQL Server configuration. Fix the error and try again.";
+    public static final String INTERNAL_ERROR = "[DiscordOAuth] Internal Error. This is a fatal error! Do not try to ignore it piece of shit";
 
 
     public void initMySQLDatabase() {
@@ -57,13 +57,13 @@ public class MySQL extends Database {
         hikari.setConnectionTimeout(1000);
         hikari.setPoolName("discordrecaptcha-pool");
 
-        System.out.println("[DiscordReCaptcha] Trying to connect to MySQL server " + host + ":" + port + "");
+        System.out.println("[DiscordOAuth] Trying to connect to MySQL server " + host + ":" + port + "");
 
         setConnection(hikari);
         if (testConnection()) {
-            System.out.println("[DiscordReCaptcha] The MySQL connection to the server " + host + ":" + port + " has been successfully established!");
+            System.out.println("[DiscordOAuth] The MySQL connection to the server " + host + ":" + port + " has been successfully established!");
         } else {
-            System.out.println("[DiscordReCaptcha] Something went wrong trying to connect.");
+            System.out.println("[DiscordOAuth] Something went wrong trying to connect.");
         }
         createTable();
 
@@ -92,32 +92,30 @@ public class MySQL extends Database {
     public void createTable() {
         try {
             Connection con = getHikari().getConnection();
-            PreparedStatement create = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + Bot.getInstance().getConfig().getString("MySQLtable") + " ("
+
+            con.prepareStatement("CREATE TABLE IF NOT EXISTS " + Bot.getInstance().getConfig().getString("MySQLtable") + "_users ("
                     + "USER_ID VARCHAR(45) NOT NULL,"
-                    + "USER VARCHAR(45) NOT NULL,"
-                    + "VERIFY_ID VARCHAR(45) NOT NULL,"
-                    + "isMuted BOOLEAN NOT NULL,"
-                    + "isBanned BOOLEAN NOT NULL,"
+                    + "USERNAME VARCHAR(45) NOT NULL,"
+                    + "PRIMARY KEY (USER_ID))").executeUpdate();
+
+            con.prepareStatement("CREATE TABLE IF NOT EXISTS " + Bot.getInstance().getConfig().getString("MySQLtable") + "_discord ("
+                    + "USER_ID VARCHAR(45) NOT NULL,"
+                    + "USERNAME VARCHAR(45) NOT NULL,"
                     + "isVerified BOOLEAN NOT NULL,"
-                    + "MUTE_COUNTER INT NOT NULL,"
-                    + "PRIMARY KEY (USER_ID))");
+                    + "isBanned BOOLEAN NOT NULL,"
+                    + "PRIMARY KEY (USER_ID))").executeUpdate();
 
-            PreparedStatement create2 = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + Bot.getInstance().getConfig().getString("MySQLtable") + "_privateChannel ("
+            con.prepareStatement("CREATE TABLE IF NOT EXISTS " + Bot.getInstance().getConfig().getString("MySQLtable") + "_profile ("
                     + "USER_ID VARCHAR(45) NOT NULL,"
-                    + "VOICE_CHANNEL VARCHAR(45) NOT NULL,"
-                    + "isActive BOOLEAN NOT NULL,"
-                    + "PRIMARY KEY (USER_ID))");
-
-            PreparedStatement create3 = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + Bot.getInstance().getConfig().getString("MySQLtable") + "_xp ("
-                    + "USER_ID VARCHAR(45) NOT NULL,"
-                    + "XP INT(45) NOT NULL,"
-                    + "LEVEL INT(45) NOT NULL,"
-                    + "ROLE VARCHAR(45) NOT NULL,"
-                    + "PRIMARY KEY (USER_ID))");
-
-            create.executeUpdate();
-            create2.executeUpdate();
-            create3.executeUpdate();
+                    + "USERNAME VARCHAR(45) NOT NULL,"
+                    + "BIO MEDIUMTEXT NOT NULL,"
+                    + "COUNTRY VARCHAR(255) NOT NULL,"
+                    + "WEBSITE VARCHAR(255) NOT NULL,"
+                    + "DISCORD VARCHAR(255) NOT NULL,"
+                    + "YOUTUBE VARCHAR(255) NOT NULL,"
+                    + "TWITTER VARCHAR(255) NOT NULL,"
+                    + "TWITCH VARCHAR(255) NOT NULL,"
+                    + "PRIMARY KEY (USER_ID))").executeUpdate();
 
         } catch(SQLException e){
             System.out.println(USER_ERROR);

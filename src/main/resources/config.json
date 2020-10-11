@@ -1,5 +1,13 @@
 {
   "serverToken": "NzYyMzQwNDQ1Mzg4NDA2ODA1.X3nu3Q.KF2TiIGbYOezw1F645lkdtk3x84",
   "serverOwnerID": "392876181449605130",
-  "serverPrefix": "!"
+  "serverPrefix": "!",
+  "MySQLhost": "localhost",
+  "MySQLport": "3306",
+  "MySQLdatabase": "DiscordOAuth",
+  "MySQLuser": "root",
+  "MySQLpassword": "123",
+  "MySQLtable": "oauth",
+  "MySQLdriver": "jdbc:mysql://",
+  "MySQLdatabaseClass": "com.mysql.jdbc.Driver"
 }
